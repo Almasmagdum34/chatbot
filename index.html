@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f3f6ed" />
+    <meta name="description" content="A personal AI study partner powered by Gemini." />
+    <title>Orbit Study | Your learning companion</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="./styles.css" />
+    <script src="./app.js?v=3" defer></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="Study navigation">
+        <a class="brand" href="./" aria-label="Orbit Study home">
+          <span class="brand-symbol" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span>orbit<span class="brand-light">study</span></span>
+        </a>
+        <button class="new-chat-button" id="new-chat" type="button"><span class="plus" aria-hidden="true">+</span> New study chat</button>
+
+        <nav class="chat-history" aria-label="Conversation history">
+          <div class="side-section-label">RECENT CHATS</div>
+          <div class="history-list" id="history-list"></div>
+        </nav>
+
+        <div class="side-section-label">YOUR LEARNING</div>
+        <div class="profile-panel">
+          <div class="profile-avatar" aria-hidden="true">✳</div>
+          <div class="profile-copy"><strong id="profile-level">Independent learner</strong><span id="profile-subjects">Add your subjects</span></div>
+          <button class="edit-profile" id="edit-profile" type="button" aria-label="Edit learning profile" title="Edit learning profile">Edit</button>
+        </div>
+        <div class="sidebar-note">Your profile is saved on this device and used to tailor explanations.</div>
+
+        <div class="sidebar-bottom">
+          <div class="connection-card">
+            <span class="connection-dot" id="connection-dot"></span>
+            <div><strong id="connection-title">Checking Gemini</strong><span id="connection-detail">Local connection</span></div>
+          </div>
+          <div class="sidebar-footnote">A study partner, not a shortcut.</div>
+        </div>
+      </aside>
+      <button class="sidebar-backdrop" id="sidebar-backdrop" type="button" aria-label="Close navigation"></button>
+
+      <main class="main-panel">
+        <header class="topbar">
+          <div class="topbar-context"><span class="context-mark" aria-hidden="true">✳</span><span>STUDY SPACE</span></div>
+          <div class="topbar-actions">
+            <button class="mobile-menu" id="toggle-sidebar" type="button" aria-label="Open chat history and profile" title="Open chat history and profile"><span aria-hidden="true">☰</span></button>
+            <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch to dark mode" title="Switch to dark mode"><span aria-hidden="true">◐</span></button>
+            <button class="reset-button" id="reset-chat" type="button" title="Start a fresh study chat"><span aria-hidden="true">↻</span> New chat</button>
+          </div>
+        </header>
+
+        <section class="chat-layout" aria-label="Study conversation">
+          <div class="welcome" id="welcome">
+            <div class="welcome-kicker"><span class="kicker-line"></span> YOUR PERSONAL STUDY PARTNER</div>
+            <h1>Curiosity is a<br />good place to <span>start.</span></h1>
+            <p class="welcome-copy">Learn at your pace. Ask for a hint, explore a tricky idea, or test what you know.</p>
+
+            <div class="suggestions">
+              <div class="suggestion-heading">PICK A FIRST QUESTION</div>
+              <button class="suggestion" type="button" data-prompt="Help me understand a topic I'm studying. Start by asking what I already know."><span class="suggestion-icon icon-leaf" aria-hidden="true">↗</span><span><strong>Learn a topic</strong><small>Build understanding one step at a time</small></span><span class="suggestion-arrow" aria-hidden="true">→</span></button>
+              <button class="suggestion" type="button" data-mode="practice" data-prompt="Quiz me on a topic I'm studying. Ask one question at a time and wait for my answer."><span class="suggestion-icon icon-sun" aria-hidden="true">?</span><span><strong>Practice recall</strong><small>Try a question and get thoughtful feedback</small></span><span class="suggestion-arrow" aria-hidden="true">→</span></button>
+              <button class="suggestion" type="button" data-mode="homework" data-prompt="I'm stuck on a homework problem. Help me figure out the next step without doing it for me."><span class="suggestion-icon icon-coral" aria-hidden="true">↗</span><span><strong>Get unstuck</strong><small>Work through a problem with helpful hints</small></span><span class="suggestion-arrow" aria-hidden="true">→</span></button>
+            </div>
+          </div>
+
+          <div class="messages" id="messages" aria-live="polite" aria-relevant="additions text"></div>
+          <div class="error-message" id="error-message" role="alert" hidden></div>
+
+          <div class="composer-wrap">
+            <div class="mode-row" role="group" aria-label="Study mode">
+              <span class="mode-label">MODE</span>
+              <div class="mode-switch">
+                <button class="mode-button is-active" type="button" data-mode="tutor" aria-pressed="true">Tutor</button>
+                <button class="mode-button" type="button" data-mode="practice" aria-pressed="false">Practice</button>
+                <button class="mode-button" type="button" data-mode="homework" aria-pressed="false">Homework help</button>
+              </div>
+            </div>
+            <form class="composer" id="chat-form">
+              <label class="sr-only" for="message-input">Ask your study partner</label>
+              <textarea id="message-input" name="message" rows="1" maxlength="10000" placeholder="What are you working on today?" required></textarea>
+              <div class="composer-bottom"><span class="composer-hint">Your pace. Your questions. <span aria-hidden="true">·</span> Enter to send</span><div class="composer-actions"><button class="stop-button" id="stop-generation" type="button" hidden><span class="stop-symbol" aria-hidden="true"></span> Stop</button><button class="send-button" id="send-button" type="submit"><span class="send-label">Ask Orbit</span><span class="send-arrow" aria-hidden="true">↗</span></button></div></div>
+            </form>
+            <p class="disclaimer">AI can make mistakes. Check important facts with your course materials.</p>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <dialog class="profile-dialog" id="profile-dialog" aria-labelledby="profile-title">
+      <form id="profile-form" method="dialog">
+        <div class="dialog-top"><div><span class="dialog-kicker">MAKE IT YOURS</span><h2 id="profile-title">Your learning profile</h2></div><button class="dialog-close" type="button" id="close-profile" aria-label="Close profile">×</button></div>
+        <p class="dialog-copy">A few preferences help Orbit meet you where you are. You can change these any time.</p>
+        <label class="field-label" for="grade-level">School level</label>
+        <select id="grade-level" name="gradeLevel">
+          <option>Elementary school</option><option>Middle school</option><option>High school</option><option>College</option><option>Graduate school</option><option>Independent learner</option>
+        </select>
+        <label class="field-label" for="subjects">Subjects you're studying <span>Optional</span></label>
+        <input id="subjects" name="subjects" maxlength="120" placeholder="For example: biology, algebra" />
+        <label class="field-label" for="explanation-style">How do you like to learn?</label>
+        <select id="explanation-style" name="explanationStyle">
+          <option>Step by step</option><option>Short and clear</option><option>Examples first</option><option>Ask me questions</option>
+        </select>
+        <div class="dialog-actions"><button class="cancel-button" type="button" id="cancel-profile">Cancel</button><button class="save-button" type="submit">Save profile <span aria-hidden="true">↗</span></button></div>
+      </form>
+    </dialog>
+  </body>
+</html>
